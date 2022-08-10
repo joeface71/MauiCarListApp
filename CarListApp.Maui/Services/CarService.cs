@@ -6,6 +6,7 @@ namespace CarListApp.Maui.Services
     {
         public List<Car> GetCars()
         {
+            //Thread.Sleep(5000);  Simulate long load time
             return new List<Car>()
             {
                 new Car
