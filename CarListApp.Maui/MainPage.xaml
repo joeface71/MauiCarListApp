@@ -16,9 +16,10 @@
                     <DataTemplate x:DataType="model:Car">
                         <Grid Padding="10">
                             <Frame HeightRequest="90">
-                                <!--<Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Command="" CommandParameter="" />
-                                </Frame.GestureRecognizers>-->
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:CarListViewModel}}, Path=GetCarDetailsCommand }" 
+                                                          CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
                                 <HorizontalStackLayout Padding="10" Spacing="5">
                                     <Label Text="{Binding Make}"></Label>
                                     <Label Text="{Binding Model}"></Label>
