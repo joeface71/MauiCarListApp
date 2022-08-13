@@ -1,5 +1,4 @@
 ﻿using CarListApp.Maui.Models;
-using CarListApp.Maui.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MauiApp1.Views;
@@ -10,13 +9,11 @@ namespace CarListApp.Maui.ViewModels
 {
     public partial class CarListViewModel : BaseViewModel
     {
-        private readonly CarService carService;
         public ObservableCollection<Car> Cars { get; private set; } = new ObservableCollection<Car>();
 
-        public CarListViewModel(CarService carService)
+        public CarListViewModel()
         {
             Title = "Car List";
-            this.carService = carService;
         }
 
         [ObservableProperty]
@@ -34,7 +31,7 @@ namespace CarListApp.Maui.ViewModels
                     Cars.Clear();
                 }
 
-                var cars = carService.GetCars();
+                var cars = App.CarService.GetCars();
 
                 foreach (var car in cars)
                 {

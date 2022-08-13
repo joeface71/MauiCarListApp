@@ -7,6 +7,7 @@ namespace CarListApp.Maui.Services
     {
         private SQLiteConnection conn;
         string _dbPath;
+        public string StatusMessage;
 
         public CarService(string dbPath)
         {
@@ -30,12 +31,12 @@ namespace CarListApp.Maui.Services
             try
             {
                 Init();
-
+                return conn.Table<Car>().ToList();
             }
             catch (Exception)
             {
 
-                throw;
+                StatusMessage = "Failed to retrieve data.";
             }
 
             return new List<Car>();
