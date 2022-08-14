@@ -9,11 +9,14 @@ namespace CarListApp.Maui.ViewModels
 {
     public partial class CarListViewModel : BaseViewModel
     {
+        const string editButtonText = "Update Car";
+        const string createButtonText = "Add Car";
         public ObservableCollection<Car> Cars { get; private set; } = new ObservableCollection<Car>();
 
         public CarListViewModel()
         {
             Title = "Car List";
+            AddEditButtonText = createButtonText;
             GetCarList().Wait();
         }
 
@@ -28,6 +31,12 @@ namespace CarListApp.Maui.ViewModels
 
         [ObservableProperty]
         string vin;
+
+        [ObservableProperty]
+        string addEditButtonText;
+
+        [ObservableProperty]
+        int carId;
 
         [RelayCommand]
         async Task GetCarList()
@@ -115,5 +124,60 @@ namespace CarListApp.Maui.ViewModels
         {
             return;
         }
+
+        [RelayCommand]
+        async Task SetEditMode(int id)
+        {
+            AddEditButtonText = editButtonText;
+            CarId = id;
+            var car = App.CarService.GetCar(id);
+            Make = car.Make;
+            Model = car.Model;
+            Vin = car.Vin;
+        }
+
+        [RelayCommand]
+        async Task SaveCar()
+        {
+            if (string.IsNullOrEmpty(Make) || (string.IsNullOrEmpty(Model) || string.IsNullOrEmpty(Vin)))
+            {
+                await Shell.Current.DisplayAlert("Invalid Data", "Please insert valid data", "Ok");
+                return;
+            }
+
+            var car = new Car
+            {
+                Make = Make,
+                Model = Model,
+                Vin = Vin
+            };
+
+            if (CarId != 0)
+            {
+                car.Id = CarId;
+                App.CarService.UpdateCar(car);
+                await Shell.Current.DisplayAlert("Info", App.CarService.StatusMessage, "Ok");
+            }
+            else
+            {
+                App.CarService.AddCar(car);
+                await Shell.Current.DisplayAlert("Info", App.CarService.StatusMessage, "Ok");
+            }
+
+            await GetCarList();
+            await ClearForm();
+        }
+
+        [RelayCommand]
+        async Task ClearForm()
+        {
+            AddEditButtonText = createButtonText;
+            CarId = 0;
+            Make = String.Empty;
+            Model = String.Empty;
+            Vin = String.Empty;
+        }
+
+
     }
 }
